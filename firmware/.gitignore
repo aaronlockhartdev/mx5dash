@@ -1,5 +1,5 @@
-# Created by https://www.toptal.com/developers/gitignore/api/c,c++,visualstudiocode
-# Edit at https://www.toptal.com/developers/gitignore?templates=c,c++,visualstudiocode
+# Created by https://www.toptal.com/developers/gitignore/api/c,c++,cmake,visualstudiocode
+# Edit at https://www.toptal.com/developers/gitignore?templates=c,c++,cmake,visualstudiocode
 
 ### C ###
 # Prerequisites
@@ -74,6 +74,25 @@ dkms.conf
 
 # Executables
 
+### CMake ###
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps
+
+### CMake Patch ###
+CMakeUserPresets.json
+
+# External projects
+*-prefix/
+
 ### VisualStudioCode ###
 .vscode/*
 !.vscode/settings.json
@@ -93,7 +112,7 @@ dkms.conf
 .history
 .ionide
 
-# End of https://www.toptal.com/developers/gitignore/api/c,c++,visualstudiocode
+# End of https://www.toptal.com/developers/gitignore/api/c,c++,cmake,visualstudiocode
 
 build/
 managed_components/
