@@ -1374,12 +1374,12 @@ CONFIG_SPI_SLAVE_ISR_IN_IRAM=y
 #
 # ESP-Driver:TWAI Configurations
 #
-CONFIG_TWAI_ISR_IN_IRAM=y
-CONFIG_TWAI_IO_FUNC_IN_IRAM=y
+# default:
+# CONFIG_TWAI_ISR_IN_IRAM is not set
+# default:
+# CONFIG_TWAI_IO_FUNC_IN_IRAM is not set
 # default:
 # CONFIG_TWAI_ISR_CACHE_SAFE is not set
-# default:
-CONFIG_TWAI_OBJ_CACHE_SAFE=y
 # default:
 # CONFIG_TWAI_ENABLE_DEBUG_LOG is not set
 # end of ESP-Driver:TWAI Configurations
@@ -1680,7 +1680,8 @@ CONFIG_ESP_INTR_IN_IRAM=y
 #
 # ESP-Driver:LCD Controller Configurations
 #
-CONFIG_LCD_RGB_ISR_IRAM_SAFE=y
+# default:
+# CONFIG_LCD_RGB_ISR_IRAM_SAFE is not set
 # default:
 # CONFIG_LCD_RGB_RESTART_IN_VSYNC is not set
 # default:
@@ -1845,7 +1846,6 @@ CONFIG_SPIRAM_CS_IO=26
 CONFIG_SPIRAM_XIP_FROM_PSRAM=y
 CONFIG_SPIRAM_FETCH_INSTRUCTIONS=y
 CONFIG_SPIRAM_RODATA=y
-# CONFIG_SPIRAM_SPEED_120M is not set
 CONFIG_SPIRAM_SPEED_80M=y
 # CONFIG_SPIRAM_SPEED_40M is not set
 # default:
@@ -2207,13 +2207,9 @@ CONFIG_ESP_WIFI_SOFTAP_SUPPORT=y
 # default:
 CONFIG_ESP_WIFI_ESPNOW_MAX_ENCRYPT_NUM=7
 # default:
-# CONFIG_ESP_WIFI_NAN_USD_ENABLE is not set
-# default:
 CONFIG_ESP_WIFI_MBEDTLS_CRYPTO=y
 # default:
 CONFIG_ESP_WIFI_MBEDTLS_TLS_CLIENT=y
-# default:
-# CONFIG_ESP_WIFI_EAP_TLS1_3 is not set
 # default:
 # CONFIG_ESP_WIFI_WAPI_PSK is not set
 # default:
@@ -2222,8 +2218,6 @@ CONFIG_ESP_WIFI_MBEDTLS_TLS_CLIENT=y
 # CONFIG_ESP_WIFI_11KV_SUPPORT is not set
 # default:
 # CONFIG_ESP_WIFI_MBO_SUPPORT is not set
-# default:
-# CONFIG_ESP_WIFI_ENABLE_ROAMING_APP is not set
 # default:
 # CONFIG_ESP_WIFI_DPP_SUPPORT is not set
 # default:
@@ -3646,6 +3640,56 @@ CONFIG_WL_SECTOR_SIZE=4096
 # end of Wear Levelling
 
 #
+# Board Support Package
+#
+# default:
+CONFIG_BSP_ERROR_CHECK=y
+
+#
+# I2C
+#
+# default:
+CONFIG_BSP_I2C_NUM=1
+# default:
+CONFIG_BSP_I2C_FAST_MODE=y
+# default:
+CONFIG_BSP_I2C_CLK_SPEED_HZ=400000
+# end of I2C
+
+#
+# SPIFFS - Virtual File System
+#
+# default:
+# CONFIG_BSP_SPIFFS_FORMAT_ON_MOUNT_FAIL is not set
+# default:
+CONFIG_BSP_SPIFFS_MOUNT_POINT="/spiffs"
+# default:
+CONFIG_BSP_SPIFFS_PARTITION_LABEL="storage"
+# default:
+CONFIG_BSP_SPIFFS_MAX_FILES=2
+# end of SPIFFS - Virtual File System
+
+#
+# uSD card - Virtual File System
+#
+# default:
+# CONFIG_BSP_SD_FORMAT_ON_MOUNT_FAIL is not set
+# default:
+CONFIG_BSP_SD_MOUNT_POINT="/sdcard"
+# end of uSD card - Virtual File System
+
+#
+# Display
+#
+# default:
+CONFIG_BSP_LCD_TRANS_QUEUE_DEPTH=10
+# end of Display
+
+# default:
+CONFIG_BSP_I2S_NUM=1
+# end of Board Support Package
+
+#
 # IoT Button
 #
 # default:
@@ -3849,12 +3893,12 @@ CONFIG_LV_CONF_SKIP=y
 # Color Settings
 #
 # CONFIG_LV_COLOR_DEPTH_32 is not set
-# CONFIG_LV_COLOR_DEPTH_24 is not set
-CONFIG_LV_COLOR_DEPTH_16=y
+CONFIG_LV_COLOR_DEPTH_24=y
+# CONFIG_LV_COLOR_DEPTH_16 is not set
 # CONFIG_LV_COLOR_DEPTH_8 is not set
 # CONFIG_LV_COLOR_DEPTH_1 is not set
 # default:
-CONFIG_LV_COLOR_DEPTH=16
+CONFIG_LV_COLOR_DEPTH=24
 # end of Color Settings
 
 #
@@ -3916,16 +3960,26 @@ CONFIG_LV_DRAW_THREAD_PRIO=3
 CONFIG_LV_USE_DRAW_SW=y
 # default:
 CONFIG_LV_DRAW_SW_SUPPORT_RGB565=y
-# CONFIG_LV_DRAW_SW_SUPPORT_RGB565A8 is not set
+# default:
+CONFIG_LV_DRAW_SW_SUPPORT_RGB565A8=y
 # default:
 CONFIG_LV_DRAW_SW_SUPPORT_RGB888=y
-# CONFIG_LV_DRAW_SW_SUPPORT_XRGB8888 is not set
-# CONFIG_LV_DRAW_SW_SUPPORT_ARGB8888 is not set
-# CONFIG_LV_DRAW_SW_SUPPORT_ARGB8888_PREMULTIPLIED is not set
-# CONFIG_LV_DRAW_SW_SUPPORT_L8 is not set
-# CONFIG_LV_DRAW_SW_SUPPORT_AL88 is not set
-# CONFIG_LV_DRAW_SW_SUPPORT_A8 is not set
-# CONFIG_LV_DRAW_SW_SUPPORT_I1 is not set
+# default:
+CONFIG_LV_DRAW_SW_SUPPORT_XRGB8888=y
+# default:
+CONFIG_LV_DRAW_SW_SUPPORT_ARGB8888=y
+# default:
+CONFIG_LV_DRAW_SW_SUPPORT_ARGB8888_PREMULTIPLIED=y
+# default:
+CONFIG_LV_DRAW_SW_SUPPORT_L8=y
+# default:
+CONFIG_LV_DRAW_SW_SUPPORT_AL88=y
+# default:
+CONFIG_LV_DRAW_SW_SUPPORT_A8=y
+# default:
+CONFIG_LV_DRAW_SW_SUPPORT_I1=y
+# default:
+CONFIG_LV_DRAW_SW_I1_LUM_THRESHOLD=127
 CONFIG_LV_DRAW_SW_DRAW_UNIT_CNT=2
 # default:
 # CONFIG_LV_USE_DRAW_ARM2D_SYNC is not set
@@ -3987,7 +4041,8 @@ CONFIG_LV_USE_DRAW_SW_ASM=0
 CONFIG_LV_USE_ASSERT_NULL=y
 # default:
 CONFIG_LV_USE_ASSERT_MALLOC=y
-CONFIG_LV_USE_ASSERT_STYLE=y
+# default:
+# CONFIG_LV_USE_ASSERT_STYLE is not set
 # default:
 # CONFIG_LV_USE_ASSERT_MEM_INTEGRITY is not set
 # default:
@@ -4018,8 +4073,7 @@ CONFIG_LV_CACHE_DEF_SIZE=0
 CONFIG_LV_IMAGE_HEADER_CACHE_DEF_CNT=0
 # default:
 CONFIG_LV_GRADIENT_MAX_STOPS=2
-# default:
-CONFIG_LV_COLOR_MIX_ROUND_OFS=128
+CONFIG_LV_COLOR_MIX_ROUND_OFS=0
 CONFIG_LV_OBJ_STYLE_CACHE=y
 # default:
 # CONFIG_LV_USE_OBJ_ID is not set
@@ -4300,7 +4354,8 @@ CONFIG_LV_USE_WIN=y
 #
 # default:
 CONFIG_LV_USE_THEME_DEFAULT=y
-CONFIG_LV_THEME_DEFAULT_DARK=y
+# default:
+# CONFIG_LV_THEME_DEFAULT_DARK is not set
 # default:
 CONFIG_LV_THEME_DEFAULT_GROW=y
 # default:
@@ -4384,7 +4439,28 @@ CONFIG_LV_FS_DEFAULT_DRIVER_LETTER=0
 #
 # default:
 # CONFIG_LV_USE_SNAPSHOT is not set
-# CONFIG_LV_USE_SYSMON is not set
+CONFIG_LV_USE_SYSMON=y
+CONFIG_LV_USE_PERF_MONITOR=y
+# default:
+# CONFIG_LV_PERF_MONITOR_ALIGN_TOP_LEFT is not set
+# default:
+# CONFIG_LV_PERF_MONITOR_ALIGN_TOP_MID is not set
+# default:
+# CONFIG_LV_PERF_MONITOR_ALIGN_TOP_RIGHT is not set
+# default:
+# CONFIG_LV_PERF_MONITOR_ALIGN_BOTTOM_LEFT is not set
+# default:
+# CONFIG_LV_PERF_MONITOR_ALIGN_BOTTOM_MID is not set
+# default:
+CONFIG_LV_PERF_MONITOR_ALIGN_BOTTOM_RIGHT=y
+# default:
+# CONFIG_LV_PERF_MONITOR_ALIGN_LEFT_MID is not set
+# default:
+# CONFIG_LV_PERF_MONITOR_ALIGN_RIGHT_MID is not set
+# default:
+# CONFIG_LV_PERF_MONITOR_ALIGN_CENTER is not set
+# default:
+# CONFIG_LV_USE_PERF_MONITOR_LOG_MODE is not set
 # default:
 # CONFIG_LV_USE_PROFILER is not set
 # default:
@@ -4470,68 +4546,47 @@ CONFIG_LVGL_VERSION_PATCH=0
 #
 # Examples
 #
-# CONFIG_LV_BUILD_EXAMPLES is not set
+# default:
+CONFIG_LV_BUILD_EXAMPLES=y
 # end of Examples
 
 #
 # Demos
 #
-# CONFIG_LV_BUILD_DEMOS is not set
+# default:
+CONFIG_LV_BUILD_DEMOS=y
+# default:
+# CONFIG_LV_USE_DEMO_WIDGETS is not set
+# default:
+# CONFIG_LV_USE_DEMO_KEYPAD_AND_ENCODER is not set
+# default:
+# CONFIG_LV_USE_DEMO_BENCHMARK is not set
+# default:
+# CONFIG_LV_USE_DEMO_RENDER is not set
+# default:
+# CONFIG_LV_USE_DEMO_SCROLL is not set
+# default:
+# CONFIG_LV_USE_DEMO_STRESS is not set
+# default:
+# CONFIG_LV_USE_DEMO_TRANSFORM is not set
+# default:
+# CONFIG_LV_USE_DEMO_MUSIC is not set
+# default:
+# CONFIG_LV_USE_DEMO_FLEX_LAYOUT is not set
+# default:
+# CONFIG_LV_USE_DEMO_MULTILANG is not set
+# default:
+# CONFIG_LV_USE_DEMO_SMARTWATCH is not set
+# default:
+# CONFIG_LV_USE_DEMO_EBIKE is not set
+# default:
+# CONFIG_LV_USE_DEMO_HIGH_RES is not set
 # end of Demos
 # end of LVGL configuration
-
-#
-# Board Support Package
-#
-# default:
-CONFIG_BSP_ERROR_CHECK=y
-
-#
-# I2C
-#
-# default:
-CONFIG_BSP_I2C_NUM=1
-# default:
-CONFIG_BSP_I2C_FAST_MODE=y
-# default:
-CONFIG_BSP_I2C_CLK_SPEED_HZ=400000
-# end of I2C
-
-#
-# SPIFFS - Virtual File System
-#
-# default:
-# CONFIG_BSP_SPIFFS_FORMAT_ON_MOUNT_FAIL is not set
-# default:
-CONFIG_BSP_SPIFFS_MOUNT_POINT="/spiffs"
-# default:
-CONFIG_BSP_SPIFFS_PARTITION_LABEL="storage"
-# default:
-CONFIG_BSP_SPIFFS_MAX_FILES=2
-# end of SPIFFS - Virtual File System
-
-#
-# uSD card - Virtual File System
-#
-# default:
-# CONFIG_BSP_SD_FORMAT_ON_MOUNT_FAIL is not set
-# default:
-CONFIG_BSP_SD_MOUNT_POINT="/sdcard"
-# end of uSD card - Virtual File System
-
-#
-# Display
-#
-# default:
-CONFIG_BSP_LCD_TRANS_QUEUE_DEPTH=10
-# end of Display
-
-# default:
-CONFIG_BSP_I2S_NUM=1
-# end of Board Support Package
 # end of Component config
 
-CONFIG_IDF_EXPERIMENTAL_FEATURES=y
+# default:
+# CONFIG_IDF_EXPERIMENTAL_FEATURES is not set
 
 # Deprecated options for backward compatibility
 # CONFIG_APP_BUILD_TYPE_ELF_RAM is not set

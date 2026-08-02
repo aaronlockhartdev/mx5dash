@@ -1,19 +1,21 @@
+#include "esp_timer.h"
+
 #include "canbus.h"
+#include "ecus/rusefi/update.h"
 
 #include <string.h>
 #include "esp_twai_types.h"
+#include "esp_twai.h"
+#include "esp_twai_onchip.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/queue.h"
 #include "freertos/task.h"
 
-#include "esp_err.h"
-#include "esp_twai.h"
-#include "esp_twai_onchip.h"
-
-#include "ecus/rusefi/update.h"
+#define STALE_TIMEOUT_US 1000000
 
 static canbus_data_t canbus_buf[2];
 static atomic_uint_fast8_t canbus_buf_idx = 0;
+static int64_t canbus_last_update = 0;
 
 static bool twai_rx_cb(twai_node_handle_t handle,
                        const twai_rx_done_event_data_t *edata, void *user_ctx) {
@@ -39,13 +41,17 @@ void twai_rx_task(void *pvParameters) {
       memcpy(&canbus_buf[1 - idx], &canbus_buf[idx], sizeof(canbus_data_t));
       update(frame, &canbus_buf[1 - idx]);
       atomic_store(&canbus_buf_idx, 1 - idx);
+      canbus_last_update = esp_timer_get_time();
     }
   }
 }
 
 canbus_data_t *canbus_get_latest(void) {
-  uint8_t idx = atomic_load(&canbus_buf_idx);
-  return &canbus_buf[1 - idx];
+  return &canbus_buf[atomic_load(&canbus_buf_idx)];
+}
+
+bool canbus_is_stale(void) {
+  return (esp_timer_get_time() - canbus_last_update) > STALE_TIMEOUT_US;
 }
 
 esp_err_t canbus_start() {
@@ -64,6 +70,8 @@ esp_err_t canbus_start() {
   ESP_ERROR_CHECK(twai_node_register_event_callbacks(node_hdl, &user_cbs,
                                                       (void *)rx_queue));
   ESP_ERROR_CHECK(twai_node_enable(node_hdl));
+
+  canbus_last_update = esp_timer_get_time();
 
   xTaskCreate(twai_rx_task, "can_rx", 2048, rx_queue, 5, NULL);
 

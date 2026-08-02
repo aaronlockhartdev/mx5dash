@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include <stdatomic.h>
+#include <stdbool.h>
 #include "esp_err.h"
 #include "esp_twai_types.h"
 
@@ -36,3 +37,4 @@ typedef struct {
 
 esp_err_t canbus_start();
 canbus_data_t *canbus_get_latest(void);
+bool canbus_is_stale(void);
