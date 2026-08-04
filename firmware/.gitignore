@@ -116,4 +116,6 @@ CMakeUserPresets.json
 
 build/
 managed_components/
+sdkconfig
+sdkconfig.old
 .cache

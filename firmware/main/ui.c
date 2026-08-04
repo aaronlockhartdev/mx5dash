@@ -4,46 +4,60 @@
 #include "bsp/display.h"
 #include "canbus.h"
 #include "ui.h"
+#include "screens/gauge.h"
+#include "sdkconfig.h"
 
 #define TAG "ui"
 
-static lv_obj_t *rpm_arc;
-static lv_obj_t *stale_label;
-static lv_obj_t *stale_screen;
-static lv_obj_t *gauge_screen;
-static lv_anim_t rpm_anim;
-static lv_anim_t *rpm_anim_run;
+typedef struct {
+  lv_obj_t *screen;
+  void (*update)(canbus_data_t *data);
+} screen_t;
 
-static void rpm_deleted_cb(lv_anim_t *anim) {
-  (void)anim;
-  rpm_anim_run = NULL;
+static screen_t current;
+static lv_timer_t *ui_timer;
+
+static lv_obj_t *stale_screen;
+
+static screen_t screens[] = {
+  { NULL, NULL },           // 0: stale
+  { NULL, gauge_screen_update }, // 1: gauge
+};
+
+static void build_stale_screen(void) {
+  stale_screen = lv_obj_create(NULL);
+  lv_obj_set_style_bg_color(stale_screen, lv_color_black(), 0);
+  lv_obj_clear_flag(stale_screen, LV_OBJ_FLAG_SCROLLABLE);
+
+  lv_obj_t *label = lv_label_create(stale_screen);
+  lv_label_set_text(label, "No CAN data");
+  lv_obj_set_style_text_color(label, lv_color_white(), 0);
+  lv_obj_set_style_text_font(label, &lv_font_montserrat_24, 0);
+  lv_obj_center(label);
+
+  screens[0].screen = stale_screen;
 }
 
-static void update_gauge(lv_timer_t *timer) {
+static void update_ui(lv_timer_t *timer) {
   (void)timer;
-
-  canbus_data_t *data = canbus_get_latest();
 
   bsp_display_lock(-1);
 
-  if (canbus_is_stale()) {
-    lv_obj_clear_flag(stale_screen, LV_OBJ_FLAG_HIDDEN);
-    lv_obj_add_flag(gauge_screen, LV_OBJ_FLAG_HIDDEN);
-  }
-  else {
-    lv_obj_add_flag(stale_screen, LV_OBJ_FLAG_HIDDEN);
-    lv_obj_clear_flag(gauge_screen, LV_OBJ_FLAG_HIDDEN);
+  int next_idx;
+#ifdef CONFIG_DEBUG_ALWAYS_SHOW_GAUGE
+  next_idx = 1;
+#else
+  next_idx = canbus_is_stale() ? 0 : 1;
+#endif
 
-    int32_t cur = lv_arc_get_value(rpm_arc);
-    if (cur != data->rpm) {
-      if (rpm_anim_run) lv_anim_delete(rpm_anim_run->var, rpm_anim_run->exec_cb);
-      lv_anim_set_var(&rpm_anim, rpm_arc);
-      lv_anim_set_values(&rpm_anim, cur, data->rpm);
-      lv_anim_set_exec_cb(&rpm_anim, (lv_anim_exec_xcb_t)lv_arc_set_value);
-      lv_anim_set_duration(&rpm_anim, 100);
-      lv_anim_set_deleted_cb(&rpm_anim, rpm_deleted_cb);
-      rpm_anim_run = lv_anim_start(&rpm_anim);
-    }
+  screen_t *next = &screens[next_idx];
+  if (current.screen != next->screen) {
+    lv_screen_load(next->screen);
+    current = *next;
+  }
+
+  if (current.update) {
+    current.update(canbus_get_latest());
   }
 
   bsp_display_unlock();
@@ -52,34 +66,23 @@ static void update_gauge(lv_timer_t *timer) {
 void ui_init(void) {
   bsp_display_lock(-1);
 
-  gauge_screen = lv_obj_create(lv_screen_active());
-  lv_obj_set_size(gauge_screen, lv_pct(100), lv_pct(100));
-  lv_obj_clear_flag(gauge_screen, LV_OBJ_FLAG_SCROLLABLE);
+  build_stale_screen();
+  gauge_screen_build();
+  screens[1].screen = gauge_screen_get();
 
-  rpm_arc = lv_arc_create(gauge_screen);
-  lv_arc_set_min_value(rpm_arc, 0);
-  lv_arc_set_max_value(rpm_arc, 9000);
-  lv_arc_set_bg_angles(rpm_arc, 0, 270);
-  lv_arc_set_rotation(rpm_arc, 135);
-  lv_arc_set_value(rpm_arc, 0);
-  lv_obj_remove_style(rpm_arc, NULL, LV_PART_KNOB);
-  lv_obj_remove_flag(rpm_arc, LV_OBJ_FLAG_CLICKABLE);
-  lv_obj_set_size(rpm_arc, lv_pct(85), lv_pct(85));
-  lv_obj_center(rpm_arc);
+  int init_idx;
+#ifdef CONFIG_DEBUG_ALWAYS_SHOW_GAUGE
+  init_idx = 1;
+#else
+  init_idx = 0;
+#endif
 
-  stale_screen = lv_obj_create(lv_screen_active());
-  lv_obj_set_size(stale_screen, lv_pct(100), lv_pct(100));
-  lv_obj_clear_flag(stale_screen, LV_OBJ_FLAG_SCROLLABLE);
-  lv_obj_add_flag(stale_screen, LV_OBJ_FLAG_HIDDEN);
-
-  stale_label = lv_label_create(stale_screen);
-  lv_label_set_text(stale_label, "No CAN data");
-  lv_obj_center(stale_label);
+  lv_screen_load(screens[init_idx].screen);
+  current = screens[init_idx];
 
   bsp_display_unlock();
 
-  lv_anim_init(&rpm_anim);
-  lv_timer_create(update_gauge, 100, NULL);
+  ui_timer = lv_timer_create(update_ui, 100, NULL);
 
   ESP_LOGI(TAG, "UI initialized");
 }

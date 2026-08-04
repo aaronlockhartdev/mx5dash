@@ -972,6 +972,21 @@ CONFIG_PARTITION_TABLE_MD5=y
 # end of Partition Table
 
 #
+# MX5Dash
+#
+# default:
+CONFIG_CAN_TX_PIN=4
+# default:
+CONFIG_CAN_RX_PIN=5
+# default:
+CONFIG_CAN_BITRATE=200000
+# default:
+CONFIG_ECU_RUSEFI=y
+# default:
+# CONFIG_DEBUG_ALWAYS_SHOW_GAUGE is not set
+# end of MX5Dash
+
+#
 # Compiler options
 #
 # CONFIG_COMPILER_OPTIMIZATION_DEBUG is not set
@@ -4124,14 +4139,12 @@ CONFIG_LV_FONT_MONTSERRAT_26=y
 # CONFIG_LV_FONT_MONTSERRAT_28 is not set
 # default:
 # CONFIG_LV_FONT_MONTSERRAT_30 is not set
-# default:
-# CONFIG_LV_FONT_MONTSERRAT_32 is not set
+CONFIG_LV_FONT_MONTSERRAT_32=y
 # default:
 # CONFIG_LV_FONT_MONTSERRAT_34 is not set
 # default:
 # CONFIG_LV_FONT_MONTSERRAT_36 is not set
-# default:
-# CONFIG_LV_FONT_MONTSERRAT_38 is not set
+CONFIG_LV_FONT_MONTSERRAT_38=y
 # default:
 # CONFIG_LV_FONT_MONTSERRAT_40 is not set
 # default:
@@ -4546,41 +4559,13 @@ CONFIG_LVGL_VERSION_PATCH=0
 #
 # Examples
 #
-# default:
-CONFIG_LV_BUILD_EXAMPLES=y
+# CONFIG_LV_BUILD_EXAMPLES is not set
 # end of Examples
 
 #
 # Demos
 #
-# default:
-CONFIG_LV_BUILD_DEMOS=y
-# default:
-# CONFIG_LV_USE_DEMO_WIDGETS is not set
-# default:
-# CONFIG_LV_USE_DEMO_KEYPAD_AND_ENCODER is not set
-# default:
-# CONFIG_LV_USE_DEMO_BENCHMARK is not set
-# default:
-# CONFIG_LV_USE_DEMO_RENDER is not set
-# default:
-# CONFIG_LV_USE_DEMO_SCROLL is not set
-# default:
-# CONFIG_LV_USE_DEMO_STRESS is not set
-# default:
-# CONFIG_LV_USE_DEMO_TRANSFORM is not set
-# default:
-# CONFIG_LV_USE_DEMO_MUSIC is not set
-# default:
-# CONFIG_LV_USE_DEMO_FLEX_LAYOUT is not set
-# default:
-# CONFIG_LV_USE_DEMO_MULTILANG is not set
-# default:
-# CONFIG_LV_USE_DEMO_SMARTWATCH is not set
-# default:
-# CONFIG_LV_USE_DEMO_EBIKE is not set
-# default:
-# CONFIG_LV_USE_DEMO_HIGH_RES is not set
+# CONFIG_LV_BUILD_DEMOS is not set
 # end of Demos
 # end of LVGL configuration
 # end of Component config

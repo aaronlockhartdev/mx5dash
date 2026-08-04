@@ -1,0 +1,39 @@
+menu "MX5Dash"
+
+config CAN_TX_PIN
+    int "CAN TX Pin"
+    default 4
+    help
+        GPIO pin for CAN transmitter.
+
+config CAN_RX_PIN
+    int "CAN RX Pin"
+    default 5
+    help
+        GPIO pin for CAN receiver.
+
+config CAN_BITRATE
+    int "CAN Bitrate (bps)"
+    default 200000
+    help
+        CAN bus bitrate in bits per second.
+
+choice
+    prompt "ECU Type"
+    default ECU_RUSEFI
+    help
+        Select the ECU CAN protocol to parse.
+
+config ECU_RUSEFI
+    bool "rusefi"
+
+endchoice
+
+config DEBUG_ALWAYS_SHOW_GAUGE
+    bool "Always show gauge screen (debug)"
+    default n
+    help
+        When enabled, always shows the gauge screen instead of
+        switching to a 'No CAN data' screen when CAN data is stale.
+
+endmenu

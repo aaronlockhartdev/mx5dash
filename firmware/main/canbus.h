@@ -5,12 +5,13 @@
 #include <stdbool.h>
 #include "esp_err.h"
 #include "esp_twai_types.h"
+#include "sdkconfig.h"
 
-#define TX_PIN 4
-#define RX_PIN 5
-#define BITRATE 200000
+#define TX_PIN CONFIG_CAN_TX_PIN
+#define RX_PIN CONFIG_CAN_RX_PIN
+#define BITRATE CONFIG_CAN_BITRATE
 
-typedef struct {
+typedef struct __attribute__((packed)) {
   bool rev_limiter;
   bool cel;
   uint16_t rpm;

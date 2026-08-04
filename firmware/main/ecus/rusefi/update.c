@@ -2,10 +2,11 @@
 #include "database.h"
 #include "esp_twai_types.h"
 #include "esp_log.h"
+#include "../ecu_update.h"
 
 #define TAG "can_update"
 
-void update(canbus_rx_t frame, canbus_data_t *canbus_data) {
+void ecu_update(canbus_rx_t frame, canbus_data_t *canbus_data) {
   switch (frame.header.id) {
     case DATABASE_BASE0_FRAME_ID: {
       struct database_base0_t data;
@@ -84,62 +85,17 @@ void update(canbus_rx_t frame, canbus_data_t *canbus_data) {
       break;
     }
 
-    case DATABASE_BASE5_FRAME_ID: {
-      struct database_base5_t data;
-      database_base5_init(&data);
-      database_base5_unpack(&data, frame.buffer, frame.header.dlc);
-
-      ESP_LOGD(TAG, "BASE5: (unused)");
+    case DATABASE_BASE5_FRAME_ID:
+    case DATABASE_BASE6_FRAME_ID:
+    case DATABASE_BASE8_FRAME_ID:
+    case DATABASE_BASE9_FRAME_ID:
+    case DATABASE_BASE10_FRAME_ID:
+    case DATABASE_BASE11_FRAME_ID:
+      ESP_LOGD(TAG, "BASE%d: (unused)", frame.header.id - DATABASE_BASE0_FRAME_ID);
       break;
-    }
-
-    case DATABASE_BASE6_FRAME_ID: {
-      struct database_base6_t data;
-      database_base6_init(&data);
-      database_base6_unpack(&data, frame.buffer, frame.header.dlc);
-
-      ESP_LOGD(TAG, "BASE6: (unused)");
-      break;
-    }
-
-    case DATABASE_BASE8_FRAME_ID: {
-      struct database_base8_t data;
-      database_base8_init(&data);
-      database_base8_unpack(&data, frame.buffer, frame.header.dlc);
-
-      ESP_LOGD(TAG, "BASE8: (unused)");
-      break;
-    }
-
-    case DATABASE_BASE9_FRAME_ID: {
-      struct database_base9_t data;
-      database_base9_init(&data);
-      database_base9_unpack(&data, frame.buffer, frame.header.dlc);
-
-      ESP_LOGD(TAG, "BASE9: (unused)");
-      break;
-    }
-
-    case DATABASE_BASE10_FRAME_ID: {
-      struct database_base10_t data;
-      database_base10_init(&data);
-      database_base10_unpack(&data, frame.buffer, frame.header.dlc);
-
-      ESP_LOGD(TAG, "BASE10: (unused)");
-      break;
-    }
-
-    case DATABASE_BASE11_FRAME_ID: {
-      struct database_base11_t data;
-      database_base11_init(&data);
-      database_base11_unpack(&data, frame.buffer, frame.header.dlc);
-
-      ESP_LOGD(TAG, "BASE11: (unused)");
-      break;
-    }
 
     default:
-      ESP_LOGD(TAG, "unknown frame 0x%03x", frame.header.id);
+      ESP_LOGE(TAG, "unexpected frame 0x%03x", frame.header.id);
       break;
   }
 }
